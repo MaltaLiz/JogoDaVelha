@@ -1,0 +1,77 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+main {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 90%;
+    margin: 40px auto; 
+}
+
+.placar {
+    text-align: center;
+    border: 2px solid rgb(122, 122, 122);
+    padding: 25px;
+    color: rgb(122, 122, 122);
+}
+
+.placar p {
+    margin-top: 5px;
+    font-size: 1.5rem;
+}
+
+#jogo {
+    width: 500px;
+    height: 500px;
+    background-color: rgb(122, 122, 122);
+    width: 450px;
+    height: 450px;
+    font-size: 100px;
+    color: black;
+}
+
+.linha {
+    width: 450px;
+    height: 150px;
+    display: flex;
+    border-bottom: 2px solid rgb(255, 255, 255);
+}
+
+.campo {
+    width: 150px;
+    height: 150px;
+    border-right: 2px solid rgb(255, 255, 255);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.sem-borda {
+    border: 0px;
+}
+
+.vencedor {
+    color: #fff;
+}
+
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.empate {
+    width: 350px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    border: 2px solid red;
+    color: red;
+}
