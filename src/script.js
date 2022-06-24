@@ -1,6 +1,8 @@
 const campos = document.querySelectorAll('.campo');
 const jogador1 = document.querySelector('#jogador1');
 const jogador2 = document.querySelector('#jogador2');
+const placarJogador1 = document.querySelector('#placarJogador1');
+const placarJogador2 = document.querySelector('#placarJogador2');
 const info = document.querySelector('#informacoes');
 let jogada = 0;
 const camposX = [];
@@ -21,25 +23,22 @@ const vez = {
     'jogador2': false
 }
 
-sessionStorage.setItem('vez', JSON.stringify(vez));
-
-jogador1.textContent = verificaPlacar('jogador1');
-jogador2.textContent = verificaPlacar('jogador2');
+iniciaOJogo();
 
 campos.forEach(campo => {
     campo.addEventListener('click', () => {
         const vezJogador1 = verificaVez();
-        if(vezJogador1) {
+        if (vezJogador1) {
             campo.textContent = 'X';
             camposX.push(parseInt(campo.getAttribute("value")));
-            if(verificaVitoria(camposX)) {
+            if (verificaVitoria(camposX)) {
                 aumentaPlacar('jogador1');
                 jogador1.textContent = verificaPlacar('jogador1');
                 reiniciaOJogo();
-            }else if(jogada == 8) {
-                deuVelha();
+            } else if (jogada == 8) {
+                deuVelha('jogador1');
                 reiniciaOJogo();
-            }else{
+            } else {
                 trocaVezDeJogar();
             }
         }
@@ -50,10 +49,10 @@ campos.forEach(campo => {
                 aumentaPlacar('jogador2');
                 jogador2.textContent = verificaPlacar('jogador2');
                 reiniciaOJogo();
-            }else if(jogada == 8) {
-                deuVelha();
+            } else if (jogada == 8) {
+                deuVelha('jogador2');
                 reiniciaOJogo();
-            }else{
+            } else {
                 trocaVezDeJogar();
             }
         }
@@ -61,10 +60,19 @@ campos.forEach(campo => {
     })
 });
 
+function iniciaOJogo() {
+    sessionStorage.setItem('vez', JSON.stringify(vez));
+
+    jogador1.textContent = verificaPlacar('jogador1');
+    jogador2.textContent = verificaPlacar('jogador2');
+    placarJogador1.classList.add('vez');
+
+}
+
 function marcaCamposVitorioso(arrayVitorias) {
-    for(campoVitorioso of arrayVitorias){
+    for (campoVitorioso of arrayVitorias) {
         campos.forEach(campo => {
-            if(campo.getAttribute("value") == campoVitorioso) campo.classList.add('vencedor');
+            if (campo.getAttribute("value") == campoVitorioso) campo.classList.add('vencedor');
         })
     }
 }
@@ -105,8 +113,23 @@ function aumentaPlacar(placarDoJogador) {
 
 function verificaVez() {
     const vezObj = JSON.parse(sessionStorage.getItem('vez'));
-    if(vezObj.jogador1) return true;
-    return false;
+    if (vezObj.jogador1) {
+        marcaProximaVez(vezObj.jogador2);
+        return true;
+    } else {
+        marcaProximaVez(!vezObj.jogador1);
+        return false;
+    }
+}
+
+function marcaProximaVez(vezJogador1){
+    if(vezJogador1) {
+        placarJogador1.classList.add('vez');
+        placarJogador2.classList.remove('vez');
+    }else {
+        placarJogador1.classList.remove('vez');
+        placarJogador2.classList.add('vez');
+    }
 }
 
 function trocaVezDeJogar() {
@@ -116,19 +139,26 @@ function trocaVezDeJogar() {
 }
 
 function trocaVezDeComecar(vencedor) {
-    if(vencedor === 'jogador1'){
+    if (vencedor === 'jogador1') {
         vez.jogador1 = true;
         vez.jogador2 = false;
-    }else {
+        marcaProximaVez(vez.jogador1)
+    } else {
         vez.jogador1 = false;
         vez.jogador2 = true;
+        marcaProximaVez(!vez.jogador2);
     }
     sessionStorage.setItem('vez', JSON.stringify(vez));
 }
 
-function deuVelha(){
+function deuVelha(jogador) {
     info.textContent = 'Deu velha!';
     info.classList.add('empate');
+    if (jogador === 'jogador1') {
+        marcaProximaVez(vez.jogador1);
+    } else {
+        marcaProximaVez(!vez.jogador2);
+    }
 }
 
 function reiniciaOJogo() {
@@ -140,7 +170,7 @@ function reiniciaOJogo() {
         info.classList.remove('empate');
         info.textContent = '';
         jogada = 0;
-    }, 1500);
+    }, 1800);
     while (camposX.length) camposX.pop();
     while (camposO.length) camposO.pop();
 }
